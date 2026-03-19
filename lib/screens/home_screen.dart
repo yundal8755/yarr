@@ -4,9 +4,35 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/question_provider.dart';
 import '../widgets/category_card.dart';
+import 'json_import_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final hasJsonAsync = ref.watch(hasUserJsonProvider);
+
+    return hasJsonAsync.when(
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (e, _) => Scaffold(
+        body: Center(child: Text('오류: $e')),
+      ),
+      data: (hasJson) {
+        // JSON 파일이 없으면 온보딩 화면
+        if (!hasJson) {
+          return const JsonImportScreen(isInitial: true);
+        }
+        return const _HomeContent();
+      },
+    );
+  }
+}
+
+class _HomeContent extends ConsumerWidget {
+  const _HomeContent();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,13 +76,32 @@ class HomeScreen extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      IconButton.filled(
-                        onPressed: () => context.push('/bookmarks'),
-                        icon: const Icon(Icons.bookmark_outline),
-                        style: IconButton.styleFrom(
-                          backgroundColor: colorScheme.surfaceContainerHighest,
-                          foregroundColor: colorScheme.onSurface,
-                        ),
+                      Row(
+                        children: [
+                          // JSON 교체 버튼
+                          IconButton.filled(
+                            onPressed: () => context.push('/import'),
+                            icon: const Icon(Icons.swap_horiz_rounded),
+                            tooltip: 'JSON 파일 교체',
+                            style: IconButton.styleFrom(
+                              backgroundColor:
+                                  colorScheme.surfaceContainerHighest,
+                              foregroundColor: colorScheme.onSurface,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          // 북마크 버튼
+                          IconButton.filled(
+                            onPressed: () => context.push('/bookmarks'),
+                            icon: const Icon(Icons.bookmark_outline),
+                            tooltip: '북마크',
+                            style: IconButton.styleFrom(
+                              backgroundColor:
+                                  colorScheme.surfaceContainerHighest,
+                              foregroundColor: colorScheme.onSurface,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

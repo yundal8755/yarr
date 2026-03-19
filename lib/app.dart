@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'data/models/question.dart';
 import 'screens/home_screen.dart';
+import 'screens/json_import_screen.dart';
 import 'screens/category_screen.dart';
 import 'screens/card_screen.dart';
 import 'screens/bookmark_screen.dart';
@@ -14,6 +15,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/import',
+      builder: (context, state) => const JsonImportScreen(isInitial: false),
     ),
     GoRoute(
       path: '/category/:name',
@@ -35,6 +40,7 @@ final _router = GoRouter(
     ),
   ],
 );
+
 
 // 카테고리 색상 팔레트
 const List<Color> _categoryColorPalette = [

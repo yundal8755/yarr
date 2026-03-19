@@ -35,53 +35,6 @@ class _CardScreenState extends ConsumerState<CardScreen> {
     super.dispose();
   }
 
-  void _showCompletionDialog() {
-    final colorScheme = Theme.of(context).colorScheme;
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: const Text(
-          '모두 완료했습니다!',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
-        content: Text(
-          '${_shuffledQuestions.length}개의 질문을 모두 학습했습니다.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: colorScheme.onSurface.withOpacity(0.6),
-          ),
-        ),
-        actionsAlignment: MainAxisAlignment.center,
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              setState(() {
-                _currentIndex = 0;
-                _revealedAnswers.clear();
-                _shuffledQuestions.shuffle();
-                _pageController.jumpToPage(0);
-              });
-            },
-            child: const Text('다시 시작'),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              context.go('/');
-            },
-            child: const Text('홈으로'),
-          ),
-        ],
-      ),
-    );
-  }
-
   void _goToNext() {
     if (_currentIndex < _shuffledQuestions.length - 1) {
       _pageController.nextPage(
@@ -89,7 +42,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      _showCompletionDialog();
+      context.pop();
     }
   }
 
@@ -209,7 +162,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                       // 질문 카드
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.all(28),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           color: colorScheme.surfaceContainerHighest
@@ -221,7 +174,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                         child: Text(
                           question.question,
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.w600,
                             height: 1.5,
                             color: colorScheme.onSurface,

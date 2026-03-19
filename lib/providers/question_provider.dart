@@ -8,12 +8,27 @@ final questionRepositoryProvider = Provider<QuestionRepository>((ref) {
   return QuestionRepository();
 });
 
+// 사용자 JSON 파일 존재 여부
+final hasUserJsonProvider = FutureProvider<bool>((ref) async {
+  final repository = ref.watch(questionRepositoryProvider);
+  return repository.hasUserJson();
+});
+
 // 전체 질문 로드
 class QuestionsNotifier extends AsyncNotifier<List<Question>> {
   @override
   Future<List<Question>> build() async {
     final repository = ref.watch(questionRepositoryProvider);
     return repository.loadQuestions();
+  }
+
+  // 파일 저장 후 상태 다시 로드
+  Future<void> reloadFromFile() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final repository = ref.read(questionRepositoryProvider);
+      return repository.loadQuestions();
+    });
   }
 
   Future<void> toggleBookmark(String id) async {
@@ -57,7 +72,6 @@ final categoriesProvider = Provider<List<String>>((ref) {
   final questionsAsync = ref.watch(questionsProvider);
   return questionsAsync.whenOrNull(
         data: (questions) {
-          // questions.json에 등장하는 순서를 유지 (중복 제거)
           final seen = <String>{};
           final categories = <String>[];
           for (final q in questions) {

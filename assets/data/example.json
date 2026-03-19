@@ -1,0 +1,92 @@
+[
+    {
+        "id": "flu_01",
+        "category": "Flutter",
+        "section": "상태 관리 (State Management)",
+        "question": "Provider와 비교했을 때 Riverpod이 가지는 주요 장점과 설계적 차이는 무엇인가요?",
+        "answer": "Riverpod은 Provider의 단점을 보완하여 컴파일 타임에 안전성을 보장하고, 위젯 트리에 의존하지 않아 어디서든 상태에 접근할 수 있습니다. 또한 같은 타입의 프로바이더를 여러 개 생성하거나 비동기 상태(AsyncValue)를 처리하는 로직이 내장되어 있어 보일러플레이트 코드를 크게 줄일 수 있습니다.",
+        "priority": 1,
+        "isBookmarked": false
+    },
+    {
+        "id": "flu_02",
+        "category": "Flutter",
+        "section": "렌더링 및 성능 최적화",
+        "question": "Flutter의 렌더링 파이프라인(Build -> Layout -> Paint) 관점에서, 불필요한 렌더링을 방지하기 위한 최적화 기법은 무엇이 있나요?",
+        "answer": "가장 중요한 것은 Build Phase를 최소화하는 것입니다. const 생성자를 사용하여 위젯 트리의 재빌드를 막고, 상태 변화가 필요한 부분만 하위 위젯으로 분리해야 합니다. 또한 Paint Phase 최적화를 위해 복잡한 애니메이션이나 정적이고 렌더링 비용이 큰 UI에는 RepaintBoundary를 적용하여 렌더링 영역을 분리하는 것이 효과적입니다.",
+        "priority": 1,
+        "isBookmarked": false
+    },
+    {
+        "id": "flu_03",
+        "category": "Flutter",
+        "section": "Dart 비동기 프로그래밍",
+        "question": "Dart에서 Future를 사용한 비동기 처리와 Isolate를 사용한 병렬 처리의 차이점은 무엇이며, 각각 언제 사용해야 하나요?",
+        "answer": "Future는 단일 스레드(Event Loop) 내에서 I/O 작업이나 네트워크 요청과 같은 대기 시간을 비동기적으로 처리할 때 사용합니다. 반면 Isolate는 독립된 메모리와 이벤트 루프를 가지는 별도의 스레드를 생성하므로, 이미지 처리나 대용량 JSON 파싱처럼 메인 스레드(UI 스레드)를 블로킹할 수 있는 무거운 연산(CPU-bound 작업)을 수행할 때 사용해야 합니다.",
+        "priority": 2,
+        "isBookmarked": false
+    },
+    {
+        "id": "swift_01",
+        "category": "Swift",
+        "section": "메모리 관리",
+        "question": "Swift의 ARC(Automatic Reference Counting) 동작 원리와 강한 순환 참조(Strong Reference Cycle)를 해결하는 방법은 무엇인가요?",
+        "answer": "ARC는 인스턴스의 참조 횟수를 추적하여 참조 카운트가 0이 되면 자동으로 메모리에서 해제하는 방식입니다. 두 객체가 서로를 강하게 참조하여 메모리 누수가 발생하는 강한 순환 참조를 해결하기 위해서는, 참조의 생명주기에 따라 `weak`(참조 대상이 먼저 메모리에서 해제될 수 있는 경우) 또는 `unowned`(참조 대상이 항상 같거나 더 긴 생명주기를 가지는 경우) 키워드를 사용하여 참조 카운트를 올리지 않도록 설계해야 합니다.",
+        "priority": 1,
+        "isBookmarked": false
+    },
+    {
+        "id": "swift_02",
+        "category": "Swift",
+        "section": "타입 시스템",
+        "question": "Swift에서 Struct(구조체)와 Class(클래스)의 차이점과 각각을 선택하는 기준은 무엇인가요?",
+        "answer": "Struct는 값 타입(Value Type)으로 Stack 메모리에 할당되며, 복사본이 전달되어 스레드 안전성이 높습니다. 반면 Class는 참조 타입(Reference Type)으로 Heap 메모리에 할당되며, 상속이 가능합니다. 상태 공유나 상속이 명확히 필요하지 않은 대부분의 데이터 모델링에는 메모리 효율과 안전성을 위해 Struct를 우선적으로 사용하는 것이 Swift의 권장 가이드라인입니다.",
+        "priority": 2,
+        "isBookmarked": false
+    },
+    {
+        "id": "swift_03",
+        "category": "Swift",
+        "section": "비동기 프로그래밍",
+        "question": "기존 GCD(Grand Central Dispatch) 기반 비동기 처리와 비교하여, Swift Concurrency(async/await)가 주는 이점은 무엇인가요?",
+        "answer": "기존 GCD나 클로저 기반의 비동기 처리는 콜백 지옥(Callback Hell)을 유발하고 코드의 실행 흐름을 파악하기 어렵게 만들었습니다. async/await는 비동기 코드를 마치 동기 코드처럼 직관적이고 순차적으로 작성할 수 있게 해주며, 컴파일러 레벨에서 Data Race를 방지할 수 있는 Actor 모델과 결합하여 안전한 동시성 프로그래밍을 지원합니다.",
+        "priority": 1,
+        "isBookmarked": false
+    },
+    {
+        "id": "cs_01",
+        "category": "CS지식",
+        "section": "네트워크",
+        "question": "TCP와 UDP의 주요 차이점을 설명하고, 각각 어떤 서비스에 적합한지 예시를 들어주세요.",
+        "answer": "TCP는 연결 지향형 프로토콜로 3-way handshaking을 통해 연결을 설정하며 데이터의 순서와 신뢰성을 보장합니다. (예: 파일 전송, 웹 페이지 로딩 등 데이터 유실이 없어야 하는 서비스). 반면 UDP는 비연결형으로 신뢰성보다 전송 속도에 초점을 맞춘 프로토콜입니다. (예: 실시간 스트리밍, 온라인 게임 등 일부 패킷 손실이 발생해도 속도가 중요한 서비스).",
+        "priority": 1,
+        "isBookmarked": false
+    },
+    {
+        "id": "cs_02",
+        "category": "CS지식",
+        "section": "운영체제",
+        "question": "프로세스(Process)와 스레드(Thread)의 차이점을 메모리 영역 관점에서 설명해주세요.",
+        "answer": "프로세스는 운영체제로부터 할당받은 독립적인 실행 단위로, 각 프로세스는 고유한 Code, Data, Heap, Stack 메모리 영역을 가집니다. 반면 스레드는 프로세스 내의 실행 흐름 단위로, 하나의 프로세스 내에 있는 여러 스레드는 Stack 영역만 개별적으로 할당받고 Code, Data, Heap 영역은 서로 공유합니다. 이로 인해 스레드 간 통신이 프로세스 간 통신(IPC)보다 빠르고 리소스 소모가 적습니다.",
+        "priority": 1,
+        "isBookmarked": false
+    },
+    {
+        "id": "cs_03",
+        "category": "CS지식",
+        "section": "자료구조",
+        "question": "Array(배열)와 LinkedList(연결 리스트)의 장단점을 시간 복잡도(Time Complexity) 측면에서 비교해주세요.",
+        "answer": "Array는 인덱스를 통해 O(1)의 시간 복잡도로 빠르게 데이터에 접근(조회)할 수 있지만, 데이터의 삽입/삭제 시 요소를 이동시켜야 하므로 O(N)이 소요되며 크기가 고정되어 있습니다. LinkedList는 포인터로 연결되어 있어 데이터 삽입/삭제가 O(1)로 빠르고 동적 크기 할당이 가능하지만, 특정 요소에 접근하려면 처음부터 순차 탐색을 해야 하므로 조회 속도가 O(N)으로 느리다는 단점이 있습니다.",
+        "priority": 2,
+        "isBookmarked": false
+    },
+    {
+        "id": "cs_04",
+        "category": "CS지식",
+        "section": "데이터베이스",
+        "question": "RDBMS(관계형 데이터베이스)와 NoSQL의 차이는 무엇이며, 각각 어떤 상황에 도입하는 것이 좋은가요?",
+        "answer": "RDBMS는 정해진 스키마에 따라 테이블 형태로 데이터를 저장하며 트랜잭션의 ACID 성질을 엄격하게 보장하므로, 금융 시스템처럼 데이터 무결성과 복잡한 조인이 필수적인 환경에 적합합니다. NoSQL은 스키마가 유연하고 분산 처리에 용이하도록 설계되어 있어, 대용량의 비정형 데이터 처리나 수평적 확장(Scale-out)이 빈번하게 요구되는 시스템에 더 적합합니다.",
+        "priority": 3,
+        "isBookmarked": false
+    }
+]
