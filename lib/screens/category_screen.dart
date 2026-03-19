@@ -143,6 +143,8 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen>
 
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: Colors.transparent,
         title: Text(
           category,
           style: const TextStyle(fontWeight: FontWeight.w700),

@@ -34,10 +34,6 @@ class CategoryCard extends StatelessWidget {
               color.withOpacity(isDark ? 0.15 : 0.15),
             ],
           ),
-          border: Border.all(
-            color: color.withOpacity(isDark ? 0.4 : 0.25),
-            width: 1,
-          ),
         ),
         child: Material(
           color: Colors.transparent,

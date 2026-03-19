@@ -1,16 +1,164 @@
-# yarr
+# 📚 FlashNote — JSON 기반 카드 노트 앱
 
-A new Flutter project.
+단어 암기, 전공 시험 대비, 기술 개념 정리 등 **반복 학습이 필요한 모든 상황**에서 사용할 수 있는 카드형 토글 노트 앱입니다.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 개요
 
-A few resources to get you started if this is your first Flutter project:
+FlashNote는 JSON 파일 하나로 학습 콘텐츠 전체를 관리합니다.
+질문(앞면)과 답(뒷면)으로 구성된 카드를 랜덤 또는 카테고리 순서로 넘기며 학습하고,
+답은 직접 생각해본 뒤 토글을 열어 확인하는 방식으로 능동적 회상(Active Recall)을 유도합니다.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+**어떤 용도로 쓸 수 있나요?**
+- 영어 단어·어원·예문 암기
+- 전공 시험 개념 정리 (운영체제, 자료구조, 알고리즘 등)
+- 자격증 기출 문제 풀이
+- 언어·프레임워크 API 학습
+- 코딩 인터뷰 기술 질문 대비
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 데이터 구조
+
+모든 학습 콘텐츠는 `assets/data/questions.json` 파일 하나에서 관리됩니다.
+JSON 배열 안에 아래 형태의 객체를 추가하면 앱에 자동으로 반영됩니다.
+
+```json
+{
+  "id": "고유 ID",
+  "category": "카테고리 이름",
+  "section": "소섹션(챕터) 이름",
+  "question": "카드 앞면에 표시될 질문 또는 단어",
+  "answer": "토글을 열면 보이는 답변 또는 설명",
+  "priority": 1,
+  "isBookmarked": false
+}
+```
+
+### 필드 설명
+
+| 필드 | 타입 | 필수 | 설명 |
+|------|------|------|------|
+| `id` | string | ✅ | 앱 전체에서 고유한 값. `영어prefix_숫자` 형식 권장 (예: `vocab_001`) |
+| `category` | string | ✅ | 탭으로 분류되는 대분류. 홈 화면에 카드로 표시됨 |
+| `section` | string | ✅ | 카테고리 내 소단원. 목록 화면에서 섹션 헤더로 표시됨 |
+| `question` | string | ✅ | 카드 앞면. 단어, 질문, 개념명 등 |
+| `answer` | string | ✅ | 카드 뒷면. 빈 문자열("")이면 "아직 답변이 없습니다"로 표시됨 |
+| `priority` | number | ✅ | `1`(높음), `2`(보통), `3`(낮음). 필터링에 사용됨 |
+| `isBookmarked` | boolean | ✅ | 초기값은 `false`. 앱에서 토글하면 기기에 저장됨 |
+
+> **참고**: `isBookmarked` 변경 사항은 SharedPreferences에 저장되므로 JSON을 다시 수정해도 앱에서 설정한 북마크는 유지됩니다.
+
+---
+
+## 콘텐츠 커스텀 방법
+
+### 1. 단어장 만들기
+
+```json
+[
+  {
+    "id": "eng_001",
+    "category": "영어",
+    "section": "TOEIC 빈출 어휘",
+    "question": "allocate",
+    "answer": "(동사) 할당하다, 배분하다\n예문: The budget was allocated to each department.",
+    "priority": 1,
+    "isBookmarked": false
+  }
+]
+```
+
+### 2. 전공 개념 정리
+
+```json
+[
+  {
+    "id": "os_001",
+    "category": "운영체제",
+    "section": "프로세스 관리",
+    "question": "문맥 교환(Context Switch)이란?",
+    "answer": "CPU가 현재 프로세스의 상태를 PCB에 저장하고 다음 프로세스의 PCB를 불러와 실행을 재개하는 과정입니다. 오버헤드가 발생하며 시간이 소요됩니다.",
+    "priority": 2,
+    "isBookmarked": false
+  }
+]
+```
+
+### 3. 카테고리·섹션 자유롭게 구성
+
+category와 section은 자유롭게 정의할 수 있습니다.
+
+```
+category 예시: "영어", "수학", "역사", "Python", "알고리즘", "자격증"
+section 예시: "챕터 1", "1주차", "빈출 개념", "오답 노트"
+```
+
+---
+
+## priority 설정 가이드
+
+| 값 | 의미 | 권장 사용 |
+|----|------|-----------|
+| `1` | 🔴 높음 | 시험에 반드시 나오는 핵심 개념, 자주 틀리는 항목 |
+| `2` | 🟡 보통 | 알아두면 좋은 내용, 기본 개념 (기본값) |
+| `3` | ⚪ 낮음 | 심화 내용, 참고용 |
+
+카테고리 상세 화면에서 priority 1만 필터링해 핵심 항목에 집중할 수 있습니다.
+
+---
+
+## answer 작성 팁
+
+- **두괄식**으로 핵심 답변을 먼저 쓰고 부연 설명을 뒤에 붙입니다.
+- 200자 내외로 간결하게 작성하면 카드 한 장에 읽기 편합니다.
+- 줄바꿈은 `\n`으로 표현합니다.
+- 아직 답변을 모르거나 나중에 채울 항목은 `""` (빈 문자열)로 두세요.
+
+**좋은 예**
+```
+"answer": "LIFO(Last In First Out) 구조의 자료구조입니다. 함수 호출 시 스택 프레임이 쌓이고, 반환 시 제거됩니다. Flutter Navigator도 화면 스택을 이 방식으로 관리합니다."
+```
+
+**지양할 예**
+```
+"answer": "스택은 LIFO입니다. Last In First Out의 약자이며, 마지막에 들어간 것이 먼저 나오는 구조입니다. 예시로는 함수 콜스택이 있고..."  ← 중복 설명, 너무 길다
+```
+
+---
+
+## JSON 파일 편집 방법
+
+1. 텍스트 에디터(VS Code 권장)로 `assets/data/questions.json` 열기
+2. 배열 안에 새 항목 추가 또는 기존 항목 수정
+3. JSON 유효성 검사: [jsonlint.com](https://jsonlint.com) 에 붙여넣어 오류 확인
+4. 앱 재빌드 후 반영 (`flutter run` 또는 `flutter build`)
+
+> **팁**: VS Code에서 `Shift+Alt+F` (Mac: `Shift+Option+F`) 로 JSON을 자동 포맷팅할 수 있습니다.
+
+---
+
+## 주의사항
+
+- `id`는 앱 전체에서 고유해야 합니다. 중복 시 북마크·우선순위 저장이 충돌합니다.
+- `category`와 `section` 값은 대소문자와 공백을 포함해 **정확히 동일한 문자열**로 작성해야 같은 그룹으로 묶입니다.
+- JSON 문법 오류(쉼표 누락, 따옴표 미닫힘 등)가 있으면 앱이 빈 화면을 표시합니다. 편집 후 반드시 유효성 검사를 하세요.
+- `isBookmarked`의 JSON 값은 초기 상태입니다. 앱에서 북마크를 설정한 이후에는 JSON 값이 덮어씌워지지 않습니다.
+
+---
+
+## 앱 구조 요약
+
+```
+홈 화면        → 카테고리별 문항 수 확인, 전체 랜덤 시작
+카테고리 화면  → 소섹션별 목록, priority 필터, 카테고리 랜덤 시작
+카드 학습 화면 → 질문 확인 → 스스로 생각 → 답 토글 → 다음 카드
+북마크 화면    → 북마크한 카드만 모아서 반복 학습
+```
+
+---
+
+## 라이선스
+
+MIT License — 자유롭게 수정·배포·활용할 수 있습니다.
